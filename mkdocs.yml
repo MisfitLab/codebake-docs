@@ -1,0 +1,9 @@
+site_name: Codebake Docs
+theme:
+  name: material  # Install with: pip install mkdocs-material
+nav:  # Auto-generates from folder structure, or list pages manually
+  - Home: index.md
+  - Getting Started: Getting-Started.md
+  - Core Concepts: Core-Concepts.md
+  - MCP Tools: MCP-Tools.md
+  # Add more as needed
