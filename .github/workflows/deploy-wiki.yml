@@ -33,23 +33,21 @@ jobs:
         run: |
           pip install mkdocs-material
       
-      - name: Create MkDocs configuration for wiki
+      - name: Prepare wiki content for MkDocs
         run: |
-          cat > wiki/mkdocs.yml << 'EOF'
+          # Create a docs directory and move wiki files there
+          mkdir -p wiki-build/docs
+          cp wiki/*.md wiki-build/docs/ 2>/dev/null || true
+
+          # Create MkDocs configuration
+          cat > wiki-build/mkdocs.yml << 'EOF'
           site_name: Codebake Wiki
           theme:
             name: material
-          docs_dir: .
-          site_dir: ../site
           EOF
-      
-      - name: Build wiki with MkDocs
+
+      - name: Build and deploy wiki with MkDocs
         run: |
-          cd wiki
-          mkdocs build
-      
-      - name: Deploy to GitHub Pages
-        run: |
-          cd wiki
+          cd wiki-build
           mkdocs gh-deploy --force
 
