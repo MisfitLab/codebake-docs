@@ -1,0 +1,55 @@
+name: Deploy Wiki to GitHub Pages
+
+on:
+  gollum:  # Triggers when wiki pages are created or updated
+  workflow_dispatch:  # Allows manual triggering
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout wiki repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}.wiki
+          path: wiki
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      
+      - name: Install MkDocs and dependencies
+        run: |
+          pip install mkdocs-material
+      
+      - name: Create MkDocs configuration for wiki
+        run: |
+          cat > wiki/mkdocs.yml << 'EOF'
+          site_name: Codebake Wiki
+          theme:
+            name: material
+          docs_dir: .
+          site_dir: ../site
+          EOF
+      
+      - name: Build wiki with MkDocs
+        run: |
+          cd wiki
+          mkdocs build
+      
+      - name: Deploy to GitHub Pages
+        run: |
+          cd wiki
+          mkdocs gh-deploy --force
+
