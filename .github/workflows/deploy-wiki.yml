@@ -36,5 +36,7 @@ jobs:
       - name: Deploy wiki to GitHub Pages
         run: |
           cd wiki
-          mkdocs gh-deploy --force
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdocs gh-deploy --force --remote-name origin --remote-branch gh-pages --repo-url https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
