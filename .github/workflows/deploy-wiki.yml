@@ -33,10 +33,16 @@ jobs:
         run: |
           pip install mkdocs-material
       
-      - name: Deploy wiki to GitHub Pages
+      - name: Configure git for deployment
         run: |
           cd wiki
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          mkdocs gh-deploy --force --remote-name origin --remote-branch gh-pages --repo-url https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          # Add main repository as a remote
+          git remote add main-repo https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
+      - name: Deploy wiki to GitHub Pages
+        run: |
+          cd wiki
+          mkdocs gh-deploy --force --remote-name main-repo --remote-branch gh-pages
 
